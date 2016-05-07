@@ -13,13 +13,11 @@ const _DEFAULT_AX_CONFIG = {
 async function _makeRequest (ax, config) {
   let result = null;
   try {
-    response = await ax.post('/gql', config);
-    if (response.status !== 200) {
-      console.warn('[GQLHTTP] Request returned non-200 code...');
-    }
+    let response = await ax.request(config);
     result = response.data;
   } catch (e) {
     console.error(`[GQLHTTP] Request failed with: ${ e.status } - ${ e.statusText }`);
+    console.error(`[GQLHTTP] Error: ${ JSON.stringify(e.data) }`);
   }
   return result;
 }
@@ -33,9 +31,12 @@ function graphQLClient (host, config) {
   let ax = axios.create(config);
 
   return {
-    query (qry, vrb) {
+    query (query, variables) {
       return _makeRequest(ax, {
-        data: JSON.stringify({ qry, vrb})
+        data: {
+          query,
+          variables
+        }
       });
     }
   };
