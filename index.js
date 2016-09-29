@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import { stringify } from 'querystring'
 import zlib from 'zlib';
 
@@ -12,12 +11,6 @@ const _DEFAULT_AX_CONFIG = {
     }
 }
 
-function _promise(fn) {
-  return new Promise((res, rej) => {
-    fn((err, succ) => err ? rej(err) : res(succ));
-  });
-}
-
 async function _makeRequest (ax, config) {
   let result = null;
   try {
@@ -25,12 +18,12 @@ async function _makeRequest (ax, config) {
     result = response.data;
   } catch (e) {
     console.error(`[GQLHTTP] Request failed with: ${ e.status } - ${ e.statusText }`);
-    if (e.data.hasOwnProperty('errors')) {
+    if (e && e.data && e.data.hasOwnProperty('errors')) {
       for (let err of e.data.errors) {
         console.error(`[GQLHTTP] Error: ${ err.message }`);
       }
     } else {
-      console.error(`[GQLHTTP] Error: ${ e.data }`);
+      console.error(`[GQLHTTP] Error: ${ e }`);
     }
   }
   return result;
@@ -45,16 +38,17 @@ function graphQLClient (host, config) {
   let ax = axios.create(config);
 
   return {
-    query (query, variables, opName) {
+    query (query, variables, opName, extra = {}) {
       return _makeRequest(ax, {
         params: {
           query,
           variables: JSON.stringify(variables),
           operationName: opName
-        }
+        },
+        ...extra
       });
     },
-    async mutate (query, variables, opName) {
+    mutate (query, variables, opName, { headers = {}, ...restExtra } = {}) {
       // @TODO Get Gzip support working
       return _makeRequest(ax, {
         data: {
@@ -65,8 +59,10 @@ function graphQLClient (host, config) {
         headers: {
           'Content-Type': 'application/json',
           // 'Content-Encoding': 'gzip'
+          ...headers
         },
-        method: 'POST'
+        method: 'POST',
+        ...restExtra
       });
     }
   };
@@ -74,3 +70,4 @@ function graphQLClient (host, config) {
 
 
 export default graphQLClient
+

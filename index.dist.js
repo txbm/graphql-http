@@ -4,9 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
 var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -20,12 +28,8 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise2 = require('babel-runtime/core-js/promise');
-
-var _promise3 = _interopRequireDefault(_promise2);
-
 var _makeRequest = function () {
-  var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(ax, config) {
+  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(ax, config) {
     var result, response, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, err;
 
     return _regenerator2.default.wrap(function _callee$(_context) {
@@ -50,7 +54,7 @@ var _makeRequest = function () {
 
             console.error('[GQLHTTP] Request failed with: ' + _context.t0.status + ' - ' + _context.t0.statusText);
 
-            if (!_context.t0.data.hasOwnProperty('errors')) {
+            if (!(_context.t0 && _context.t0.data && _context.t0.data.hasOwnProperty('errors'))) {
               _context.next = 33;
               break;
             }
@@ -103,7 +107,7 @@ var _makeRequest = function () {
             break;
 
           case 33:
-            console.error('[GQLHTTP] Error: ' + _context.t0.data);
+            console.error('[GQLHTTP] Error: ' + _context.t0);
 
           case 34:
             return _context.abrupt('return', result);
@@ -115,8 +119,9 @@ var _makeRequest = function () {
       }
     }, _callee, this, [[1, 8], [15, 19, 23, 31], [24,, 26, 30]]);
   }));
+
   return function _makeRequest(_x, _x2) {
-    return ref.apply(this, arguments);
+    return _ref.apply(this, arguments);
   };
 }();
 
@@ -141,14 +146,6 @@ var _DEFAULT_AX_CONFIG = {
   }
 };
 
-function _promise(fn) {
-  return new _promise3.default(function (res, rej) {
-    fn(function (err, succ) {
-      return err ? rej(err) : res(succ);
-    });
-  });
-}
-
 function graphQLClient(host, config) {
   if (config === undefined) {
     config = _DEFAULT_AX_CONFIG;
@@ -158,42 +155,35 @@ function graphQLClient(host, config) {
 
   return {
     query: function query(_query, variables, opName) {
-      return _makeRequest(ax, {
+      var extra = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+      return _makeRequest(ax, (0, _extends3.default)({
         params: {
           query: _query,
           variables: (0, _stringify2.default)(variables),
           operationName: opName
         }
-      });
+      }, extra));
     },
     mutate: function mutate(query, variables, opName) {
-      var _this = this;
+      var _ref2 = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
-      return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-        return _regenerator2.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                return _context2.abrupt('return', _makeRequest(ax, {
-                  data: {
-                    query: query,
-                    variables: variables,
-                    opName: opName
-                  },
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  // 'Content-Encoding': 'gzip'
-                  method: 'POST'
-                }));
+      var _ref2$headers = _ref2.headers;
+      var headers = _ref2$headers === undefined ? {} : _ref2$headers;
+      var restExtra = (0, _objectWithoutProperties3.default)(_ref2, ['headers']);
 
-              case 1:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, _this);
-      }))();
+      // @TODO Get Gzip support working
+      return _makeRequest(ax, (0, _extends3.default)({
+        data: {
+          query: query,
+          variables: variables,
+          opName: opName
+        },
+        headers: (0, _extends3.default)({
+          'Content-Type': 'application/json'
+        }, headers),
+        method: 'POST'
+      }, restExtra));
     }
   };
 }
