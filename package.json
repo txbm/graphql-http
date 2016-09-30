@@ -1,6 +1,6 @@
 {
   "name": "graphql-http",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A GraphQL client for executing GraphQL queries over HTTP.",
   "main": "index.dist.js",
   "scripts": {
