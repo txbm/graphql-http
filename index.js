@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { stringify } from 'querystring'
-import zlib from 'zlib';
 
 const _DEFAULT_AX_CONFIG = {
     url: '/gql',
