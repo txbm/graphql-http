@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "description": "A GraphQL client for executing GraphQL queries over HTTP.",
   "scripts": {
-    "test": "eslint lib"
+    "test": "eslint lib && jest"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,8 @@
   "peerDependencies": {},
   "devDependencies": {
     "eslint": "^3.9.0",
-    "eslint-config-semistandard": "^7.0.0"
+    "eslint-config-semistandard": "^7.0.0",
+    "fetch-mock": "^5.5.0",
+    "jest": "^16.0.2"
   }
 }
