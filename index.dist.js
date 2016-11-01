@@ -131,10 +131,6 @@ var _axios2 = _interopRequireDefault(_axios);
 
 var _querystring = require('querystring');
 
-var _zlib = require('zlib');
-
-var _zlib2 = _interopRequireDefault(_zlib);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _DEFAULT_AX_CONFIG = {
