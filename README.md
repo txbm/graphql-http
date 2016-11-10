@@ -2,6 +2,11 @@
 
 A GraphQL client for executing queries over HTTP.
 
+### DISCLAIMER
+
+This library is not suitable for production use. If you're looking for a client
+with similar functionality, see [Lokka](https://github.com/kadirahq/lokka). It
+has much more support and is much more robust.
 
 ### Usage
 
@@ -9,11 +14,13 @@ A GraphQL client for executing queries over HTTP.
 import { GQLClient } from 'graphql-http';
 
 const client = GQLClient('http://localhost:3000', {
-  // anything passed here is merged with
-  // the options passed to fetch()
-  credentials: true,
-  headers: {
-    'X-Requested-With': 'XMLHttpRequest'
+  fetch: {
+    // anything passed here is merged with
+    // the options passed to fetch()
+    credentials: true,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
   }
 });
 ```
