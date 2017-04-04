@@ -1,6 +1,6 @@
 {
   "name": "graphql-http",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A GraphQL client for executing GraphQL queries over HTTP.",
   "scripts": {
     "test": "eslint lib && jest"
